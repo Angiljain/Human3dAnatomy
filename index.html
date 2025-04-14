@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Human Anatomy Explorer</title>
+  
+  <!-- Google Model Viewer for 3D models -->
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+  
+  <style>
+    /* Base Styles - Dark Theme */
+    :root {
+      --primary-color: #121212; /* Very dark background */
+      --secondary-color: #1e1e1e; /* Slightly lighter dark for sections */
+      --accent-color: #e64c66; /* Vibrant reddish-pink accent */
+      --accent-glow: rgba(230, 76, 102, 0.5); /* Glow effect for accent */
+      --light-color: #f8f8f8; /* Almost white text */
+      --dark-text: #e0e0e0; /* Slightly off-white text */
+      --card-bg: #252525; /* Dark card background */
+      --card-border: #333; /* Darker border for cards */
+      --gradient-dark: #121212;
+      --gradient-light: #202020;
+      --header-bg: rgba(15, 15, 15, 0.95); /* Semi-transparent dark header */
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: var(--dark-text);
+      background-color: var(--primary-color);
+    }
+    
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 15px;
+    }
+    
+    /* Header Styles */
+    header {
+      background-color: var(--header-bg);
+      backdrop-filter: blur(10px);
+      padding: 15px 0;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+    }
+    
+    header .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo {
+      color: var(--light-color);
+      font-size: 1.8rem;
+      font-weight: bold;
+      letter-spacing: 1px;
+      text-shadow: 0 0 10px var(--accent-glow);
+    }
+    
+    nav ul {
+      display: flex;
+      list-style: none;
+    }
+    
+    nav ul li {
+      margin-left: 20px;
+    }
+    
+    nav ul li a {
+      color: var(--light-color);
+      text-decoration: none;
+      transition: all 0.3s;
+      font-weight: 500;
+      padding: 5px 10px;
+      border-radius: 4px;
+    }
+    
+    nav ul li a:hover {
+      color: var(--accent-color);
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+    
+    .cta {
+      background-color: var(--accent-color);
+      color: white;
+      text-decoration: none;
+      padding: 12px 25px;
+      border-radius: 30px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      transition: all 0.3s;
+      display: inline-block;
+      box-shadow: 0 5px 15px rgba(230, 76, 102, 0.4);
+    }
+    
+    .cta:hover {
+      background-color: #ff3c5a;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(230, 76, 102, 0.6);
+    }
+    
+    /* Hero Section */
+    .hero {
+      background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/api/placeholder/1600/900');
+      background-size: cover;
+      background-position: center;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: white;
+      padding-top: 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at center, var(--accent-glow), transparent 70%);
+      z-index: 1;
+      animation: pulse 8s infinite alternate;
+    }
+    
+    @keyframes pulse {
+      0% { opacity: 0.2; }
+      100% { opacity: 0.6; }
+    }
+    
+    .hero-container {
+      max-width: 800px;
+      padding: 0 20px;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .hero h1 {
+      font-size: 3.8rem;
+      margin-bottom: 20px;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+      letter-spacing: 1px;
+      line-height: 1.2;
+      animation: fadeIn 1.5s ease-out;
+    }
+    
+    .hero p {
+      font-size: 1.5rem;
+      margin-bottom: 30px;
+      text-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
+      opacity: 0.9;
+      animation: fadeIn 2s ease-out;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* Interactive 3D Section */
+    .interactive-3d {
+      padding: 100px 0;
+      background-color: var(--secondary-color);
+      background-image: linear-gradient(45deg, var(--gradient-dark), var(--gradient-light));
+      position: relative;
+    }
+    
+    .interactive-3d::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--accent-color), transparent);
+    }
+    
+    .interactive-container {
+      text-align: center;
+      padding: 20px;
+    }
+    
+    .interactive-container h2 {
+      font-size: 2.8rem;
+      margin-bottom: 20px;
+      color: var(--light-color);
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+    }
+    
+    .interactive-container p {
+      font-size: 1.3rem;
+      margin-bottom: 40px;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+      color: var(--dark-text);
+      opacity: 0.8;
+    }
+    
+    /* Explore Section */
+    .explore-section {
+      padding: 100px 0;
+      background-image: linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)), url('/api/placeholder/1600/900');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      color: white;
+      position: relative;
+    }
+    
+    .explore-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at center, rgba(230, 76, 102, 0.15), transparent);
+    }
+    
+    .explore-container {
+      text-align: center;
+      padding: 20px;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .explore-container h2 {
+      font-size: 2.8rem;
+      margin-bottom: 40px;
+      color: white;
+      text-shadow: 0 0 15px var(--accent-glow);
+    }
+    
+    .explore-container > p {
+      color: white;
+      max-width: 800px;
+      margin: 0 auto 40px;
+      font-size: 1.3rem;
+      opacity: 0.9;
+    }
+    
+    .model-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 30px;
+      margin-top: 40px;
+    }
+    
+    .model-card {
+      background-color: var(--card-bg);
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      transition: transform 0.4s, box-shadow 0.4s;
+      border: 1px solid var(--card-border);
+    }
+    
+    .model-card:hover {
+      transform: translateY(-15px);
+      box-shadow: 0 15px 35px rgba(230, 76, 102, 0.2);
+      border-color: rgba(230, 76, 102, 0.3);
+    }
+    
+    .model-viewer-container {
+      height: 300px;
+      background-color: #1a1a1a;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .model-info {
+      padding: 25px;
+      color: var(--dark-text);
+    }
+    
+    .model-info h3 {
+      color: var(--light-color);
+      margin-bottom: 15px;
+      font-size: 1.5rem;
+    }
+    
+    .model-info p {
+      font-size: 0.95rem;
+      opacity: 0.8;
+      line-height: 1.6;
+    }
+
+    /* Facts Section */
+    .facts-section {
+      padding: 100px 0;
+      background-color: var(--secondary-color);
+      background-image: linear-gradient(135deg, var(--gradient-dark), var(--gradient-light));
+      position: relative;
+    }
+    
+    .facts-container {
+      text-align: center;
+    }
+    
+    .facts-container h2 {
+      font-size: 2.8rem;
+      margin-bottom: 40px;
+      color: var(--light-color);
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+    }
+    
+    .facts-container > p {
+      max-width: 800px;
+      margin: 0 auto 50px;
+      font-size: 1.3rem;
+      color: var(--dark-text);
+      opacity: 0.8;
+    }
+    
+    .facts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 30px;
+    }
+    
+    .fact-card {
+      background-color: var(--card-bg);
+      padding: 35px;
+      border-radius: 15px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+      transition: transform 0.4s, box-shadow 0.4s;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--card-border);
+      text-align: left;
+    }
+    
+    .fact-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(230, 76, 102, 0.15);
+    }
+    
+    .fact-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 5px;
+      height: 100%;
+      background: linear-gradient(to bottom, var(--accent-color), transparent);
+    }
+    
+    .fact-card h3 {
+      color: var(--light-color);
+      margin-bottom: 15px;
+      font-size: 1.6rem;
+    }
+    
+    .fact-card p {
+      color: var(--dark-text);
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+    
+    .fact-number {
+      font-size: 4rem;
+      font-weight: bold;
+      color: var(--accent-color);
+      margin-bottom: 15px;
+      opacity: 0.2;
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      z-index: 0;
+    }
+    
+    .fact-source {
+      font-size: 0.8rem;
+      color: #888;
+      margin-top: 20px;
+      font-style: italic;
+    }
+    
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: var(--primary-color);
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: var(--accent-color);
+      border-radius: 5px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: #ff3c5a;
+    }
+    
+    /* Animations */
+    @keyframes glow {
+      0% { box-shadow: 0 0 5px rgba(230, 76, 102, 0.5); }
+      100% { box-shadow: 0 0 20px rgba(230, 76, 102, 0.8); }
+    }
+    
+    /* Model Viewer Custom Styling */
+    model-viewer {
+      --poster-color: #1a1a1a;
+      --progress-bar-color: var(--accent-color);
+      --progress-mask: linear-gradient(to right, var(--accent-color), var(--accent-color));
+    }
+  </style>
+</head>
+<body>
+  
+  <!-- Header Section -->
+  <header>
+    <div class="container">
+      <h1 class="logo">360Anatomy</h1>
+      <nav>
+        <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#models">3D Models</a></li>
+          <li><a href="#explore">Explore</a></li>
+          <li><a href="#facts">Facts</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  
+  <!-- Hero Section -->
+  <section class="hero" id="home">
+    <div class="hero-container">
+      <h1>Explore the Wonders of Human Anatomy</h1>
+      <p>Interactive 3D models and in-depth insights into the human body.</p>
+      <a href="#models" class="cta">Start Exploring</a>
+    </div>
+  </section>
+  
+  <!-- 3D Model Viewer Section -->
+  <section class="interactive-3d" id="models">
+    <div class="interactive-container">
+      <h2>Interactive 3D Anatomy</h2>
+      <p>Rotate, zoom, and explore detailed human body structures in 3D.</p>
+      <div style="display: flex; justify-content: center; align-items: center;">
+        <model-viewer
+          src="Huma 3d 2.0.glb"
+          alt="3D Human Anatomy Model"
+          style="height: 80vh; width: 80vw;"
+          auto-rotate
+          camera-controls
+          ar
+          shadow-intensity="1"
+        ></model-viewer>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Explore Section with Multiple Models -->
+  <section class="explore-section" id="explore">
+    <div class="container explore-container">
+      <h2>Explore Human Anatomy</h2>
+      <p>Discover detailed 3D models of different body systems and organs. Interact with any model to learn more about human anatomy.</p>
+      
+      <div class="model-grid">
+        <!-- Skeleton Model -->
+        <div class="model-card">
+          <div class="model-viewer-container">
+            <model-viewer
+              src="skeleton.glb"
+              alt="Skeleton Model"
+              auto-rotate
+              camera-controls
+              style="width: 100%; height: 100%;"
+            ></model-viewer>
+          </div>
+          <div class="model-info">
+            <h3>Skeletal System</h3>
+            <p>Explore the human skeleton structure with 206 bones that provide support, protection, and movement.</p>
+          </div>
+        </div>
+        
+        <!-- Muscular System Model -->
+        <div class="model-card">
+          <div class="model-viewer-container">
+            <model-viewer
+              src="muscules.glb"
+              alt="Muscular System Model"
+              auto-rotate
+              camera-controls
+              style="width: 100%; height: 100%;"
+            ></model-viewer>
+          </div>
+          <div class="model-info">
+            <h3>Muscular System</h3>
+            <p>Discover over 600 muscles that enable movement, maintain posture, and regulate body functions.</p>
+          </div>
+        </div>
+        
+        <!-- Cardiovascular System Model -->
+        <div class="model-card">
+          <div class="model-viewer-container">
+            <model-viewer
+              src="heart.glb"
+              alt="Heart and Cardiovascular System"
+              auto-rotate
+              camera-controls
+              style="width: 100%; height: 100%;"
+            ></model-viewer>
+          </div>
+          <div class="model-info">
+            <h3>Cardiovascular System</h3>
+            <p>Examine the heart and blood vessels that circulate blood throughout the body.</p>
+          </div>
+        </div>
+        
+        <!-- Respiratory System Model -->
+        <div class="model-card">
+          <div class="model-viewer-container">
+            <model-viewer
+              src="respiratory_system.glb"
+              alt="Respiratory System"
+              auto-rotate
+              camera-controls
+              style="width: 100%; height: 100%;"
+            ></model-viewer>
+          </div>
+          <div class="model-info">
+            <h3>Respiratory System</h3>
+            <p>Study the lungs and airways responsible for oxygen intake and carbon dioxide elimination.</p>
+          </div>
+        </div>
+        
+        <!-- Digestive System Model -->
+        <div class="model-card">
+          <div class="model-viewer-container">
+            <model-viewer
+              src="digestive_system.glb"
+              alt="Digestive System"
+              auto-rotate
+              camera-controls
+              style="width: 100%; height: 100%;"
+            ></model-viewer>
+          </div>
+          <div class="model-info">
+            <h3>Digestive System</h3>
+            <p>View the organs involved in breaking down food and absorbing nutrients.</p>
+          </div>
+        </div>
+        
+        <!-- Nervous System Model -->
+        <div class="model-card">
+          <div class="model-viewer-container">
+            <model-viewer
+              src="nervoussystem.glb"
+              alt="Brain and Nervous System"
+              auto-rotate
+              camera-controls
+              style="width: 100%; height: 100%;"
+            ></model-viewer>
+          </div>
+          <div class="model-info">
+            <h3>Nervous System</h3>
+            <p>Explore the brain, spinal cord, and neural network that controls bodily functions.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Facts Section -->
+  <section class="facts-section" id="facts">
+    <div class="container facts-container">
+      <h2>Fascinating Anatomy Facts</h2>
+      <p>Discover amazing facts about the human body that showcase its incredible complexity and capabilities.</p>
+      
+      <div class="facts-grid">
+        <!-- Fact 1 -->
+        <div class="fact-card">
+          <div class="fact-number">1</div>
+          <h3>Brain Power</h3>
+          <p>Your brain generates approximately 12-25 watts of electricity when you're awake - enough to power a low-wattage LED light bulb.</p>
+          <p class="fact-source">Source: Scientific American</p>
+        </div>
+        
+        <!-- Fact 2 -->
+        <div class="fact-card">
+          <div class="fact-number">2</div>
+          <h3>Bone Strength</h3>
+          <p>Ounce for ounce, human bones are stronger than steel. A bone the size of a matchbox can support up to 9 tons - that's four times stronger than concrete!</p>
+          <p class="fact-source">Source: Smithsonian Magazine</p>
+        </div>
+        
+        <!-- Fact 3 -->
+        <div class="fact-card">
+          <div class="fact-number">3</div>
+          <h3>Blood Vessels</h3>
+          <p>If all your blood vessels were laid end to end, they would stretch approximately 60,000 miles - enough to circle the Earth more than twice.</p>
+          <p class="fact-source">Source: American Heart Association</p>
+        </div>
+        
+        <!-- Fact 4 -->
+        <div class="fact-card">
+          <div class="fact-number">4</div>
+          <h3>Lung Surface Area</h3>
+          <p>The surface area of your lungs is roughly equal to a tennis court. Their accordion-like structure maximizes the area available for oxygen exchange.</p>
+          <p class="fact-source">Source: American Lung Association</p>
+        </div>
+        
+        <!-- Fact 5 -->
+        <div class="fact-card">
+          <div class="fact-number">5</div>
+          <h3>Mighty Heart</h3>
+          <p>Your heart beats approximately 100,000 times per day, pumping about 2,000 gallons of blood. That's over 35 million beats per year!</p>
+          <p class="fact-source">Source: Cleveland Clinic</p>
+        </div>
+        
+        <!-- Fact 6 -->
+        <div class="fact-card">
+          <div class="fact-number">6</div>
+          <h3>Nerve Speed</h3>
+          <p>Nerve impulses travel to and from the brain at speeds of up to 268 miles per hour - faster than a Formula 1 race car.</p>
+          <p class="fact-source">Source: National Institute of Neurological Disorders and Stroke</p>
+        </div>
+        
+        <!-- Fact 7 -->
+        <div class="fact-card">
+          <div class="fact-number">7</div>
+          <h3>Stomach Acid</h3>
+          <p>Your stomach acid is strong enough to dissolve metal. The protective mucus lining prevents it from digesting your stomach itself.</p>
+          <p class="fact-source">Source: Journal of Clinical Investigation</p>
+        </div>
+        
+        <!-- Fact 8 -->
+        <div class="fact-card">
+          <div class="fact-number">8</div>
+          <h3>DNA Length</h3>
+          <p>If unwound and stretched out, the DNA from all your cells would span about 10 billion miles - roughly the distance from Earth to Pluto and back.</p>
+          <p class="fact-source">Source: National Human Genome Research Institute</p>
+        </div>
+        
+        <!-- Fact 9 -->
+        <div class="fact-card">
+          <div class="fact-number">9</div>
+          <h3>Growing Skeleton</h3>
+          <p>You're born with about 300 bones, but by adulthood, you only have 206. Some bones fuse together as you grow.</p>
+          <p class="fact-source">Source: National Institute of Arthritis and Musculoskeletal and Skin Diseases</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+</body>
+</html>
