@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Skeletal System</title>
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+  <style>
+    body {
+      background-color: #080707;
+      color: #e0e0e0;
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+    }
+    header, footer {
+      background-color: #000000;
+      text-align: center;
+      padding: 20px;
+      color: #ffffff;
+    }
+    .container {
+      padding: 20px;
+      max-width: 900px;
+      margin: auto;
+    }
+    h2 {
+      color: #ff3c5a;
+    }
+    ul, p {
+      line-height: 1.7;
+    }
+    a {
+      color: #81d4fa;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    model-viewer {
+      width: 100%;
+      height: 500px;
+      background-color: #000000;
+      margin-bottom: 30px;
+      border-radius: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Human Skeletal System</h1>
+    <p>Explore the framework that gives shape and protection to our body.</p>
+  </header>
+
+  <!-- 3D Model Viewer -->
+  <model-viewer 
+    src="skeleton.glb" 
+    alt="3D model of human skeleton"
+    camera-controls 
+    auto-rotate 
+    shadow-intensity="1" 
+    ar
+  ></model-viewer>
+
+  <div class="container">
+    <section>
+      <h2>Overview</h2>
+      <p>
+        The human skeletal system is the internal framework that supports the body and protects vital organs. 
+        Composed of 206 bones in adults, it also includes cartilage, joints, and ligaments. This system is essential 
+        not only for physical structure but also for movement, blood cell production, and mineral storage.
+      </p>
+    </section>
+
+    <section>
+      <h2>Major Components</h2>
+      <ul>
+        <li><strong>Skull:</strong> Protects the brain and forms the structure of the face.</li>
+        <li><strong>Vertebral Column:</strong> Backbone made up of 33 vertebrae; protects the spinal cord.</li>
+        <li><strong>Rib Cage:</strong> Protects the heart and lungs; includes 12 pairs of ribs.</li>
+        <li><strong>Pelvic Girdle:</strong> Supports abdominal organs and connects the spine to the lower limbs.</li>
+        <li><strong>Limbs:</strong> Includes bones of arms (humerus, radius, ulna) and legs (femur, tibia, fibula).</li>
+        <li><strong>Joints:</strong> Points where two or more bones meet (e.g., knees, elbows).</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Functions of the Skeletal System</h2>
+      <ul>
+        <li><strong>Support:</strong> Provides the structural framework for the body.</li>
+        <li><strong>Protection:</strong> Shields internal organs like the brain, heart, and lungs.</li>
+        <li><strong>Movement:</strong> Works with muscles to enable body motion.</li>
+        <li><strong>Mineral Storage:</strong> Stores essential minerals like calcium and phosphorus.</li>
+        <li><strong>Blood Cell Production:</strong> Red bone marrow produces red and white blood cells.</li>
+        <li><strong>Energy Storage:</strong> Yellow marrow stores fat as an energy reserve.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Interesting Facts</h2>
+      <ul>
+        <li>The femur is the longest and strongest bone in the body.</li>
+        <li>Babies are born with about 270 bones, but some fuse as they grow.</li>
+        <li>The smallest bone is the stapes in the ear.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Learn More</h2>
+      <p>
+        For interactive 3D exploration and quizzes, visit 
+        <a href="https://www.visiblebody.com/learn/skeleton" target="_blank">Visible Body – Skeletal System</a>.
+      </p>
+    </section>
+  </div>
+
+  <footer>
+    &copy; 2025 Human Anatomy Explorer | All rights reserved.
+  </footer>
+
+</body>
+</html>
